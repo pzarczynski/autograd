@@ -1,7 +1,8 @@
+from abc import ABC, abstractmethod
+from typing import Iterable, Optional
+
 import numpy as np
 from numpy.typing import NDArray as Array
-from typing import Optional, Iterable
-from abc import ABC, abstractmethod
 
 
 def reduce(array: Array, shape: tuple[int, ...]) -> Array:
@@ -271,13 +272,13 @@ class binary_cross_entropy_with_logits(operation):
         log_one_minus_sigmoid_logits = -np.logaddexp(0, logits)
         loss_element_wise = -(targets * log_sigmoid_logits + 
                               (1 - targets) * log_one_minus_sigmoid_logits)
-        loss = np.mean(loss_element_wise)
+        loss = np.mean(np.sum(loss_element_wise, axis=-1))
         return loss
     
     def backward(self, xs, grad):
         sigmoid_logits = 1 / (1 + np.exp(-xs[0]))
         grad_logits = sigmoid_logits - xs[1]
-        grad_logits = grad * grad_logits / xs[0].size
+        grad_logits = grad * grad_logits / xs[0].shape[0]
         yield grad_logits
         yield -grad_logits
         

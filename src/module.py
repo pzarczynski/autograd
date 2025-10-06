@@ -1,8 +1,8 @@
-import numpy as np
 import pickle
-
 from abc import ABC, abstractmethod
 from typing import Iterable
+
+import numpy as np
 
 from .ops import variable
 
@@ -10,11 +10,6 @@ from .ops import variable
 def kaiming_normal(shape, fan_in):
     """Kaiming normal distribution (stddev = 2 / sqrt(`fan_in`))."""
     stddev = np.sqrt(2.0 / fan_in)
-    return np.random.randn(*shape) * stddev
-
-
-def xavier_normal(shape, fan_in, fan_out):
-    stddev = np.sqrt(2.0 / (fan_in + fan_out))
     return np.random.randn(*shape) * stddev
 
 
